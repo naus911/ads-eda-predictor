@@ -165,6 +165,63 @@ class PersonasController
      			  	</script>';
      			}
      	}
+      public function ctrCrearPersonaVisita(){
+        $tablas=PersonasController::tablasName();
+
+            $ruta=null;
+          if(isset($_POST["idPersona"])&&$_POST['idPersona']!=null&&isset($_POST["idPPL"])&&$_POST['idPPL']!=null){
+
+            $datos = array('idPersona' =>$_POST['idPersona'],
+                          'idPPL' =>$_POST['idPPL'],
+                          'parentesco' =>$_POST['parentesco'],
+                          'tVisita' =>$_POST['tVisita'],
+                          'cParentesco' =>$_POST['cParentesco'],
+                          'cElector' =>$_POST['cElector'],
+                          'curp' =>$_POST['curp'],
+                          'fotos' =>$_POST['fotos'],
+                          'acta' =>$_POST['acta'],
+                          'cDom' =>$_POST['cDom'],
+                          'dia' =>$_POST['dia'],
+                          'eMedico' =>$_POST['eMedico'],
+                          'fMedico' =>$_POST['fMedico'],
+                          'ePapa' =>$_POST['ePapa'],
+                          'fPapa' =>$_POST['fPapa'],
+                          'eVih' =>$_POST['eVih'],
+                          'fVih' =>$_POST['fVih'],
+                          'temporal' =>$_POST['temporal']
+                       );
+
+
+            $respuesta =PersonasModel::mdlCrearPersonaVisita($tablas, $datos);
+            if($respuesta == "ok"){
+              echo'<script>
+              swal({
+                  type: "success",
+                  title: "El usuario ha sido editado correctamente",
+                  showConfirmButton: true,
+                  confirmButtonText: "Cerrar"
+                  }).then(function(result){
+                      if (result.value) {
+                      window.location = "personas/edit?idPersona='.$datos['idPersona'].'";
+                      }
+                    })
+              </script>';
+            }
+          }else{
+            echo'<script>
+              swal({
+                  type: "error",
+                  title: "¡error '.$respuesta.'",
+                  showConfirmButton: true,
+                  confirmButtonText: "Cerrar"
+                  }).then(function(result){
+                  if (result.value) {
+                  window.location = "personas/list";
+                  }
+                })
+              </script>';
+          }
+      }
 
 
 private function tablasName()

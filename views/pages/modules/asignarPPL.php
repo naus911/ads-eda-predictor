@@ -28,7 +28,8 @@
 
                 <div class="form-group col xs-6">
                   <label>Seleccione PPL</label>
-                  <select class="form-control select2 ppl" name="ppl" style="width: 100%;">
+                  <input type="hidden" name="idPersona" id="idPersona" value="">
+                  <select class="form-control select2 ppl" name="idPPL" style="width: 100%;">
                     <option>Buscar PPL</option>
                   <?php foreach ($ppls as $key => $value) {
                   print'<option value="'.$value['rowid_ppl'].'" ruta="'.$value['foto_ppl'].'">'.$value['aPaterno_ppl'].' '.$value['aMaterno_ppl'].' '.$value['nombre_ppl'].'</option>';
@@ -48,7 +49,7 @@
                 <div class="form-group col-xs-6">
                   <label>Parentesco</label>
 
-                    <select class="form-control " name="edoCivil"id="edoCivil" required="required" >
+                    <select class="form-control " name="parentesco" id="edoCivil" required="required" >
                       <?php foreach ($parentesco as $key => $value) {
                       print'<option value="'.$value['clave_parentesco'].'">'.$value['descripcion_parentesco'].'</option>';
                       } ?>
@@ -155,31 +156,39 @@
               </div>
           <div class="col-md-6  rMedicos" style="display:none;">
                   <label class="rating">Requisitos Medicos <span>:</span></label>
-					    	<br>
-						 	<div class="form-control">
-								<label for="q-option">
-                  <input type="checkbox" id="eMedicocheck" name="eMedico" value="1"  > E.Medico</label>
-								<div id="emedico"class="pull-right"><lable>Fecha de Estudio</label>
-								<input type="text" class="input-medium  datepicker" id="datepicker" name="fMedico" title="Por Favor introduzca Fecha nacimiento" >
-							</div>
-            </div><br>
+      					    	<br>
+      						 	<div class="form-control">
+      								<label for="q-option">
+                        <input type="checkbox" id="eMedicocheck" name="eMedico" value="1"  > E.Medico</label>
+      								<div id="emedico"class="pull-right"><lable>Fecha de Estudio</label>
+      								<input type="text" class="input-medium  datepicker" id="datepicker" name="fMedico" >
+      							</div>
+                  </div><br>
 								<div class="form-control">
 
-								<label for="q-option"><input type="checkbox" id="ePapacheck" name="ePapa" value="1"  >E. Pananicolaou</label>
+								<label for="q-option">
+                  <input type="checkbox" id="ePapacheck" name="ePapa" value="1"  >E. Pananicolaou</label>
 								<div id="epapa" class="pull-right">Fecha de Estudio
-								<input type="text" class="input-medium  datepicker" id="datepicker" name="fPapa" placeholder="AAA-MM-DD" title="Por Favor introduzca Fecha nacimiento">
+								<input type="text" class="input-medium  datepicker" id="datepicker" name="fPapa" >
 									</div>
 									</div>
                   <br>
 								<div class="form-control">
 								<label for="r-option"><input type="checkbox" id="eVihcheck" name="eVih" value="1"  >E. VIH</label>
-								<div id="evih" class="pull-right">Fecha de Estudio<input type="text" class="input-medium datepicker" id="datepicker" name="fVih" placeholder="AAA-MM-DD" title="Por Favor introduzca Fecha nacimiento"  ></div>
+								<div id="evih" class="pull-right">Fecha de Estudio
+                  <input type="text" class="input-medium datepicker" id="datepicker" name="fVih"   ></div>
                 </div>
             </div>
-
-                  </div>
-                </div>
+            <div class="col-md-6 temporal" style="display:none;">
+              <div class="form-control">
+              <label>Permiso Temporal </label>
+              <div   class="pull-right">
+                <input type="text" class="input-medium" name="temporal"  placeholder="Especifique el permiso" ></div>
+              </div>
             </div>
+        </div>
+    </div>
+</div>
 
 
               <!-- /.box-body -->

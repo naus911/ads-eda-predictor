@@ -83,6 +83,51 @@ LEFT OUTER JOIN $tabla3 c on a.rowid_persona = c.fk_persona
     }
 
   }
+  public function MdlCrearPersonaVisita($tablas,$data)
+ {
+   $db=Conexion::conectar();
+   try {
+
+    $stmt=$db->prepare("INSERT INTO ".$tablas['tabla']."
+     (parentesco,tipoVisita,dFamiliar,dConyugal,fk_persona,fk_ppl) VALUES
+   (:parentesco,:tipoVisita,:dFamiliar,:dConyugal,:fk_persona,:fk_ppl);");
+   $stmt->bindParam(":parentesco",$data['parentesco'],PDO::PARAM_STR);
+   $stmt->bindParam(":tipoVisita",$data['tVisita'],PDO::PARAM_STR);
+   $stmt->bindParam(":dFamiliar",$data[''],PDO::PARAM_STR);
+   $stmt->bindParam(":dConyugal",$data[''],PDO::PARAM_STR);
+   $stmt->bindParam(":fk_persona",$data['idPersona'],PDO::PARAM_STR);
+   $stmt->bindParam(":fk_ppl",$data['idPPL'],PDO::PARAM_STR);
+
+     if ($stmt->execute()) {
+       $lastid=$db->lastInsertid();
+       $stmt=$db->prepare("INSERT INTO ".$tablas['tabla2']."
+        (cParentesco,identificacion,curp,fotos,actaNacimiento,cDomicilio,eMedico,fMedico,ePapa,eVih,fVih,requisitoTemporal,fk_visita) VALUES
+      (:cParentesco,:identificacion,:curp,:fotos,:actaNacimiento,:cDomicilio,:eMedico,:fMedico,:ePapa,:eVih,:fVih,:requisitoTemporal,:fk_visita);");
+      $stmt->bindParam(":cParentesco",$data['cParentesco'],PDO::PARAM_STR);
+      $stmt->bindParam(":identificacion",$data[''],PDO::PARAM_STR);
+      $stmt->bindParam(":curp",$data[''],PDO::PARAM_STR);
+      $stmt->bindParam(":fotos",$data[''],PDO::PARAM_STR);
+      $stmt->bindParam(":actaNacimiento",$data[''],PDO::PARAM_STR);
+      $stmt->bindParam(":cDomicilio",$data[''],PDO::PARAM_STR);
+      $stmt->bindParam(":eMedico",$data[''],PDO::PARAM_STR);
+      $stmt->bindParam(":ePapa",$data[''],PDO::PARAM_STR);
+      $stmt->bindParam(":fPapa",$data[''],PDO::PARAM_STR);
+      $stmt->bindParam(":eVih",$data[''],PDO::PARAM_STR);
+      $stmt->bindParam(":fVih",$data[''],PDO::PARAM_STR);
+      $stmt->bindParam(":fk_visita",$lastid,PDO::PARAM_STR);
+      $stmt->execute();
+
+
+       return("ok");
+     }else{
+       return("error");
+     }
+   }
+   catch (\Exception $e) {
+
+   }
+
+ }
   public function mdlEditarPersona($tablas,$data)
   {
     try {

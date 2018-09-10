@@ -44,5 +44,13 @@
     if($(this).is(':checked')){
       $(".diasConyugal").hide();
       $(".rMedicos").hide();
+      $(".temporal").hide();
+    }
+  });
+  $("#temp-option").click(function(){
+    if($(this).is(':checked')){
+      $(".diasConyugal").hide();
+      $(".rMedicos").hide();
+      $(".temporal").show();
     }
   })
