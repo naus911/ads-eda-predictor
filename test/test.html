@@ -1,0 +1,29 @@
+
+
+<img src="../views/images/users/hugo-853.jpg" class="bort" idU="56" href="../views/images/users/hugo-853.jpg" width="50">
+<script src="../views/js/ajax-jquery-1.11.3-jquery.min.js"></script>
+<script type="text/javascript">
+	$(document).ready(function()
+	{
+		$('form').submit(function() {
+			$.ajax({
+				data:$(this).serialize(),
+				type:'post',
+				url:'02.php',
+				success:function(varX){
+					$('#target').html(varX);
+				}
+			});
+			return false;
+		});
+
+		// body...
+	});
+</script>
+
+<form method="post" action="02.php">
+
+	<input type="text" name="name">
+	<input type="submit" name="aceptar">
+</form>
+<div id="target"></div>

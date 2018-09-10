@@ -1,0 +1,6 @@
+<footer class="main-footer">
+    <div class="pull-right hidden-xs">
+      <b>Version</b> 2.0
+    </div>
+    <strong>Copyright &copy; 2018-2022 <a href="#">H Gallo</a>.</strong> Todos los derechos reservados.
+  </footer>
