@@ -79,38 +79,7 @@
 						</ul>
                 </div>
 
-              <div class="form-group col-md-6">
-                <label class="rating">Dias de Visita <span>:</span></label>
-						<ul>
-						<li>
-								<input type="radio" id="g-option" name="dia" value="MA" />
-								<label for="h-option">Martes</label>
-								<div class="check"><div class="inside"></div></div>
-							</li>
-							<li>
-								<input type="radio" id="h-option" name="dia" value="MI" />
-								<label for="h-option">Miercoles</label>
-								<div class="check"><div class="inside"></div></div>
-							</li>
-
-							<li>
-								<input type="radio" id="i-option" name="dia" value="VI">
-								<label for="i-option">Viernes</label>
-								<div class="check"><div class="inside"></div></div>
-							</li>
-							<li>
-								<input type="radio" id="j-option" name="dia" value="DO" >
-								<label for="j-option">Domingo</label>
-								<div class="check"><div class="inside"></div></div>
-							</li>
-
-
-						</ul>
-
-                  </div>
-
-
-                  </div>
+                </div>
                 </div>
             </div>
             <div class="col-md-12">
@@ -158,7 +127,33 @@
 
 						</ul>
           </div>
-          <div class="col-md-6">
+          <div class="form-group col-md-6 diasConyugal" style="display:none;">
+            <label class="rating">Dias de Visita <span>:</span></label>
+        <ul>
+        <li>
+            <input type="radio" id="g-option" name="dia" value="MA" />
+            <label for="h-option">Martes</label>
+            <div class="check"><div class="inside"></div></div>
+          </li>
+          <li>
+            <input type="radio" id="h-option" name="dia" value="MI" />
+            <label for="h-option">Miercoles</label>
+            <div class="check"><div class="inside"></div></div>
+          </li>
+
+          <li>
+            <input type="radio" id="i-option" name="dia" value="VI">
+            <label for="i-option">Viernes</label>
+            <div class="check"><div class="inside"></div></div>
+          </li>
+          <li>
+            <input type="radio" id="j-option" name="dia" value="DO" >
+            <label for="j-option">Domingo</label>
+            <div class="check"><div class="inside"></div></div>
+          </li>
+        </ul>
+              </div>
+          <div class="col-md-6  rMedicos" style="display:none;">
                   <label class="rating">Requisitos Medicos <span>:</span></label>
 					    	<br>
 						 	<div class="form-control">

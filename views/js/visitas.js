@@ -34,3 +34,15 @@
       return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
   }
   loadDataPersona();
+  $("#intima-option").click(function(){
+    if($(this).is(':checked')){
+      $(".diasConyugal").show();
+      $(".rMedicos").show();
+    }
+  });
+  $("#familiar-option").click(function(){
+    if($(this).is(':checked')){
+      $(".diasConyugal").hide();
+      $(".rMedicos").hide();
+    }
+  })
