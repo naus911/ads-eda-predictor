@@ -32,8 +32,10 @@
                   <select class="form-control select2 ppl" name="idPPL" style="width: 100%;">
                     <option>Buscar PPL</option>
                   <?php foreach ($ppls as $key => $value) {
+                    if($value['status_ppl']!=0){
                   print'<option value="'.$value['rowid_ppl'].'" ruta="'.$value['foto_ppl'].'">'.$value['aPaterno_ppl'].' '.$value['aMaterno_ppl'].' '.$value['nombre_ppl'].'</option>';
-                  } ?>
+                }
+              } ?>
                   </select>
                 </div>
               </div>
@@ -204,3 +206,8 @@
           <!-- /.box -->
 
       </form>
+      <?php
+      if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+      $crearPersona= new PersonasController();
+      $crearPersona-> ctrCrearPersonaVisita();
+    }

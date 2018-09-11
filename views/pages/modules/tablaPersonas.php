@@ -33,6 +33,7 @@
                   }else{
                     print '<td><button class="btn btn-danger btn-xs btnActivar" title="Cambiar estado" idPersona="'.$value["rowid_persona"].'" estadoUsuario="1">Desactivado</button></td>';
                   }
+                  if($value["status_persona"] != '0'){
                   print'<td>
                     <div class="btn-group">
                     <button class="btn btn-warning btnEditarPersona" idUsuario="'.$value["rowid_persona"].'"  title="Editar Persona"><i class="fa fa-pencil"></i></button>
@@ -40,6 +41,7 @@
 
                     </div>
                   </td>';
+                }
                 print'</tr>';
 
                $i++;    } ?>

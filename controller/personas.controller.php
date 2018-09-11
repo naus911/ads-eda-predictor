@@ -4,11 +4,9 @@
  */
 class PersonasController
 {
-
   public  $Util;
   function __construct()
   {
-
     $this->Util = new Utilcontroller();
     #$this->tabla="spo_persona";
   }
@@ -26,15 +24,12 @@ class PersonasController
   }
   public function ctrCrearPersona()
   {
-
   $tablas=PersonasController::tablasName();
-
       if (isset($_POST['nuevoNombrePersona'])) {
          if(preg_match('/^[a-zA-Z0-9ñÑáéíóúÁÉÍÓÚ]+$/',$_POST["nuevoNombrePersona"])){
            $fcreacion=date("Y-m-d H:i:s");
            $ruta="";
             if (isset($_FILES['nuevaFoto']["tmp_name"])) {
-
               $ruta=$this->Util->ImageProcess();
               }
            else{
@@ -54,7 +49,6 @@ class PersonasController
                         'fcreacion'=>$fcreacion,
                         'foto'=>$ruta
        						       );
-
                    $respuesta=PersonasModel::MdlCrearPersona($tablas,$datos);
                    if ($respuesta=='ok') {
               		   print'<script>
@@ -86,19 +80,15 @@ class PersonasController
                      });
                      </script>';
                    }
-
         }
       }
       public function ctrEditarPersona(){
         $tablas=PersonasController::tablasName();
-
       			$ruta=null;
      			if(preg_match('/^[a-zA-Z0-9ñÑáéíóúÁÉÍÓÚ ]+$/', $_POST["nuevoNombrePersona"])){
-
      				if(isset($_FILES["nuevaFoto"]["tmp_name"]) && !empty($_FILES["nuevaFoto"]["tmp_name"])){
      					$ruta=$this->Util->ImageProcess();
      				}
-
      				$datos = array('idPersona' =>$_POST['idPersona'],
               'nombre' =>$_POST['nuevoNombrePersona'],
          						      'aPaterno' =>$_POST['aPaterno'],
@@ -134,7 +124,6 @@ class PersonasController
                 			  }else{
                           	$datos['foto']=$_POST['imgPersona'];
                         }
-
      				$respuesta =PersonasModel::mdlEditarPersona($tablas, $datos);
      				if($respuesta == "ok"){
      					echo'<script>
@@ -167,10 +156,8 @@ class PersonasController
      	}
       public function ctrCrearPersonaVisita(){
         $tablas=PersonasController::tablasName();
-
             $ruta=null;
           if(isset($_POST["idPersona"])&&$_POST['idPersona']!=null&&isset($_POST["idPPL"])&&$_POST['idPPL']!=null){
-
             $datos = array('idPersona' =>$_POST['idPersona'],
                           'idPPL' =>$_POST['idPPL'],
                           'parentesco' =>$_POST['parentesco'],
@@ -181,7 +168,8 @@ class PersonasController
                           'fotos' =>$_POST['fotos'],
                           'acta' =>$_POST['acta'],
                           'cDom' =>$_POST['cDom'],
-                          'dia' =>$_POST['dia'],
+                          'dia' =>"",
+                          'diac' =>"",
                           'eMedico' =>$_POST['eMedico'],
                           'fMedico' =>$_POST['fMedico'],
                           'ePapa' =>$_POST['ePapa'],
@@ -190,14 +178,23 @@ class PersonasController
                           'fVih' =>$_POST['fVih'],
                           'temporal' =>$_POST['temporal']
                        );
+                       if (isset($datos['tVisita'])) {
+                 			 switch ($datos['tVisita']) {
+                 			 	case 'FAM':
+                 			 		$datos['dia']='MI,DO';
+                 			 		break;
+                 			 		case 'CON':
+                 			 			$datos['dia']='MI,DO';
+                            $datos['diac']=$_POST['dia'];
+                            break;
+                	 		 			}
 
-
-            $respuesta =PersonasModel::mdlCrearPersonaVisita($tablas, $datos);
+            $respuesta=PersonasModel::mdlCrearPersonaVisita($tablas, $datos);
             if($respuesta == "ok"){
               echo'<script>
               swal({
                   type: "success",
-                  title: "El usuario ha sido editado correctamente",
+                  title: "El PPL ha sido asignado correctamente a la Persona",
                   showConfirmButton: true,
                   confirmButtonText: "Cerrar"
                   }).then(function(result){
@@ -222,19 +219,15 @@ class PersonasController
               </script>';
           }
       }
-
-
+    }
 private function tablasName()
 {
   $tablas = array('tabla' =>"spo_persona" ,
 'tabla2' => "spo_personaUbicacion",
-'tabla3' => "spo_personaDetalles" );
+'tabla3' => "spo_personaDetalles",
+'tabla4' =>"spo_visita",
+'tabla5'=>"spo_requisitosVisita");
   return $tablas;
 }
-
-
 }
-
-
-
  ?>

@@ -13,7 +13,7 @@
       dataType: "json",
       success: function(respuesta) {
 
-  			$("#formEditar").attr('action','personas/edit?idPersona='+prodId);
+  			$("#formEditar").attr('action','visitas/edit?idPersona='+prodId);
   		$("#idPersona").val(respuesta['rowid_persona']);
   		$(".profile-username").append(respuesta['nombre_persona']);
   		$("#Nombre").val(respuesta['nombre_persona']);
