@@ -38,6 +38,7 @@
                     <div class="btn-group">
                     <button class="btn btn-warning btnEditarPersona" idUsuario="'.$value["rowid_persona"].'"  title="Editar Persona"><i class="fa fa-pencil"></i></button>
                     <button class="btn btn-success btnAsignarPPL" idUsuario="'.$value["rowid_persona"].'"  title="Asignar PPL"><i class="fa  fa-user-plus"></i></button>
+                      <button class="btn btn-info btnProfilePersona" idUsuario="'.$value["rowid_persona"].'"  title="Detalle Persona"><i class="fa  fa-search"></i></button>
 
                     </div>
                   </td>';

@@ -6,7 +6,17 @@
       <ol class="breadcrumb">
         <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
         <li><a href="#">Examples</a></li>
-        <li class="active">User profile</li>
+        <li class="active"><?php if (isset($_GET['arg'])) {
+          switch ($_GET['arg']) {
+            case 'persona':
+              print'Perfil Persona';
+              break;
+
+            default:
+              // code...
+              break;
+          }
+        } ?></li>
       </ol>
     </section>
 
@@ -366,5 +376,3 @@
         <!-- /.col -->
       </div>
       <!-- /.row -->
-
-  

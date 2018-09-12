@@ -83,6 +83,11 @@ $(".btnAsignarPPL").click(function() {
 	window.location="visitas/asignar?idPersona="+idUsuario;
 
 });
+$(".btnProfilePersona").click(function() {
+	var idUsuario= $(this).attr("idUsuario");
+	window.location="profile/persona?idPersona="+idUsuario;
+
+});
 
 function loadDataPersona(){
 	var prodId = getParameterByName('idPersona');

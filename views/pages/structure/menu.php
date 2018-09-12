@@ -47,6 +47,7 @@
           <ul class="treeview-menu">
             <li><a href="personas/list"><i class="fa fa-circle-o"></i> Ver Personas</a></li>
             <li><a href="personas/new"><i class="fa fa-circle-o"></i> Agregar Persona</a></li>
+            
           </ul>
         </li>
         <li class="treeview">
