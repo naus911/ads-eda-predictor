@@ -41,16 +41,21 @@ try:
     from rare_grouper import RareCategoryGrouper
 except Exception as e:
     # If import fails, define a minimal fallback that does no grouping (but warn user)
-    st.warning("Could not import rare_grouper.RareCategoryGrouper — falling back to no-op grouper. "
-               "Create rare_grouper.py in project root for robust saving/loading. Error: " + str(e))
+    st.warning(
+        "Could not import rare_grouper.RareCategoryGrouper — falling back to no-op grouper. "
+        "Create rare_grouper.py in project root for robust saving/loading. Error: " + str(e)
+    )
 
     class RareCategoryGrouper(BaseEstimator, TransformerMixin):
         def __init__(self, groups=None):
             self.groups = groups or {}
+
         def fit(self, X, y=None):
             return self
+
         def transform(self, X):
             return X
+
 
 # -------------------------
 # Load & simple cleaning
@@ -75,16 +80,19 @@ def load_and_clean(path):
                 pass
     return df
 
+
 df = load_and_clean(str(DATA_PATH))
 
 # -------------------------
 # Page header
 # -------------------------
 st.header("🔮 Predictor — pipelines, CV, encoding, persistence & correlation analysis")
-st.markdown("""
+st.markdown(
+    """
 Train pipelines with per-column preprocessing (numeric/categorical), tune with GridSearchCV, persist pipelines,
 and inspect correlations between selected predictors and the target (numeric heatmap + categorical correlations).
-""")
+"""
+)
 
 # -------------------------
 # Target & predictors UI
@@ -98,7 +106,9 @@ if not numeric_cols_all:
 st.subheader("1) Choose target & predictors")
 target = st.selectbox("Target variable (numeric)", options=numeric_cols_all)
 possible_predictors = [c for c in all_cols if c != target]
-predictors = st.multiselect("Predictors (numeric or categorical)", options=possible_predictors, default=possible_predictors[:4])
+predictors = st.multiselect(
+    "Predictors (numeric or categorical)", options=possible_predictors, default=possible_predictors[:4]
+)
 
 if not predictors:
     st.info("Select at least one predictor to continue.")
@@ -106,7 +116,9 @@ if not predictors:
 
 selected_numeric = [c for c in predictors if c in numeric_cols_all]
 selected_categorical = [c for c in predictors if c not in numeric_cols_all]
-st.markdown(f"**Numeric:** {selected_numeric if selected_numeric else 'None'} — **Categorical:** {selected_categorical if selected_categorical else 'None'}")
+st.markdown(
+    f"**Numeric:** {selected_numeric if selected_numeric else 'None'} — **Categorical:** {selected_categorical if selected_categorical else 'None'}"
+)
 
 # -------------------------
 # Categorical per-column controls
@@ -117,8 +129,12 @@ if selected_categorical:
     for col in selected_categorical:
         with st.expander(f"'{col}' settings", expanded=False):
             st.write("Group rare categories by relative frequency threshold or keep top-k categories (rest -> __OTHER__).")
-            min_freq = st.slider(f"{col}: minimum relative frequency (0 = disabled)", 0.0, 0.5, 0.0, step=0.01, key=f"{col}_minfreq")
-            top_k = st.number_input(f"{col}: keep top-k categories (0 = keep all)", min_value=0, max_value=1000, value=0, step=1, key=f"{col}_topk")
+            min_freq = st.slider(
+                f"{col}: minimum relative frequency (0 = disabled)", 0.0, 0.5, 0.0, step=0.01, key=f"{col}_minfreq"
+            )
+            top_k = st.number_input(
+                f"{col}: keep top-k categories (0 = keep all)", min_value=0, max_value=1000, value=0, step=1, key=f"{col}_topk"
+            )
             min_freq_val = None if float(min_freq) == 0.0 else float(min_freq)
             top_k_val = None if int(top_k) == 0 else int(top_k)
             cat_settings[col] = {'min_freq': min_freq_val, 'top_k': top_k_val}
@@ -129,7 +145,9 @@ else:
 # Modeling options
 # -------------------------
 st.subheader("2) Modeling & preprocessing options")
-model_name = st.selectbox("Estimator", ["Linear Regression", "Ridge Regression", "Lasso Regression", "Random Forest"])
+model_name = st.selectbox(
+    "Estimator", ["Linear Regression", "Ridge Regression", "Lasso Regression", "Random Forest"]
+)
 scaler_choice = st.selectbox("Scaler (numeric)", ["StandardScaler", "MinMaxScaler", "None"])
 cv_folds = st.slider("CV folds (k)", 2, 10, 5)
 random_state = int(st.number_input("Random seed", value=42, step=1))
@@ -140,15 +158,15 @@ grid_params = {}
 if model_name in ["Ridge Regression", "Lasso Regression"]:
     alpha_vals = st.text_input("Alpha values (comma separated)", value="0.01,0.1,1.0,10.0")
     try:
-        grid_params['alpha'] = [float(x.strip()) for x in alpha_vals.split(",") if x.strip()!=""]
+        grid_params['alpha'] = [float(x.strip()) for x in alpha_vals.split(",") if x.strip() != ""]
     except:
         grid_params['alpha'] = [1.0]
 elif model_name == "Random Forest":
     n_estimators = st.text_input("n_estimators (comma separated)", value="50,100,200")
     max_depths = st.text_input("max_depth (comma separated, 0=none)", value="0,5,10")
     try:
-        ne = [int(x.strip()) for x in n_estimators.split(",") if x.strip()!=""]
-        md = [None if int(x.strip())==0 else int(x.strip()) for x in max_depths.split(",") if x.strip()!=""]
+        ne = [int(x.strip()) for x in n_estimators.split(",") if x.strip() != ""]
+        md = [None if int(x.strip()) == 0 else int(x.strip()) for x in max_depths.split(",") if x.strip() != ""]
         grid_params['n_estimators'] = ne
         grid_params['max_depth'] = md
     except:
@@ -231,6 +249,9 @@ if data.empty:
 
 X = data[predictors]
 y = data[target]
+# ensure random_state variable exists (defensive)
+if 'random_state' not in locals():
+    random_state = 42
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=test_size, random_state=random_state)
 
 # numeric pipeline
@@ -243,12 +264,25 @@ num_pipeline = Pipeline(num_steps)
 
 # categorical pipeline with RareCategoryGrouper
 cat_pipeline = None
+# Build OneHotEncoder in a version-compatible way (sparse vs sparse_output)
+# Some sklearn versions accept `sparse=False`, others use `sparse_output=False`.
+try:
+    ohe = OneHotEncoder(handle_unknown="ignore", sparse=False)
+except TypeError:
+    try:
+        ohe = OneHotEncoder(handle_unknown="ignore", sparse_output=False)
+    except TypeError:
+        # fallback to default; may produce sparse output
+        ohe = OneHotEncoder(handle_unknown="ignore")
+
 if selected_categorical:
-    cat_pipeline = Pipeline([
-        ("grouper", RareCategoryGrouper(groups=cat_settings)),
-        ("imputer", SimpleImputer(strategy="most_frequent")),
-        ("ohe", OneHotEncoder(handle_unknown="ignore", sparse=False))
-    ])
+    cat_pipeline = Pipeline(
+        [
+            ("grouper", RareCategoryGrouper(groups=cat_settings)),
+            ("imputer", SimpleImputer(strategy="most_frequent")),
+            ("ohe", ohe),
+        ]
+    )
 
 transformers = []
 if selected_numeric:
@@ -304,7 +338,7 @@ if st.button("Run training"):
                 "model_name": model_name,
                 "predictors": predictors,
                 "target": target,
-                "trained_at": int(time.time())
+                "trained_at": int(time.time()),
             }
 
             # Evaluate
@@ -386,9 +420,11 @@ else:
             st.error(f"Prediction failed: {e}")
 
 st.markdown("---")
-st.caption("""
+st.caption(
+    """
 Notes:
 - Correlation heatmap is Pearson's correlation on numeric features and the numeric target.
 - For categorical predictors we compute one-hot dummies and show correlations between those dummies and the numeric target (useful for detecting strong category-target associations).
 - Ensure rare_grouper.py exists at project root so the pipeline's RareCategoryGrouper can be pickled and loaded reliably.
-""")
+"""
+)
