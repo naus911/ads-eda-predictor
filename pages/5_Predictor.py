@@ -343,7 +343,10 @@ if st.button("Run training"):
 
             # Evaluate
             y_pred = trained_pipeline.predict(X_test)
-            rmse = mean_squared_error(y_test, y_pred, squared=False)
+            try:
+             rmse = mean_squared_error(y_test, y_pred, squared=False)  # new sklearn
+            except TypeError:
+             rmse = np.sqrt(mean_squared_error(y_test, y_pred))
             r2 = r2_score(y_test, y_pred)
             st.write(f"Test RMSE: **{rmse:.4f}**, R²: **{r2:.4f}**")
         except Exception as e:
