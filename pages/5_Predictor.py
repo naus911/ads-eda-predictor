@@ -344,9 +344,9 @@ if st.button("Run training"):
             # Evaluate
             y_pred = trained_pipeline.predict(X_test)
             try:
-             rmse = mean_squared_error(y_test, y_pred, squared=False)  # new sklearn
+                rmse = mean_squared_error(y_test, y_pred, squared=False)  # new sklearn
             except TypeError:
-             rmse = np.sqrt(mean_squared_error(y_test, y_pred))
+                rmse = np.sqrt(mean_squared_error(y_test, y_pred))
             r2 = r2_score(y_test, y_pred)
             st.write(f"Test RMSE: **{rmse:.4f}**, R²: **{r2:.4f}**")
         except Exception as e:
@@ -391,36 +391,58 @@ if choice and choice != "(none)":
 # Manual prediction
 st.markdown("---")
 st.subheader("Manual prediction (use trained or loaded pipeline)")
-model_for_pred = st.session_state.get("loaded_model") or st.session_state.get("best_model")
-if model_for_pred is None:
-    st.info("No pipeline available for prediction — train one or load one.")
-else:
-    st.write("Pipeline ready for prediction. Provide values for the features you trained with.")
-    input_dict = {}
-    cols_ui = st.columns(max(1, min(len(predictors), 4)))
-    for i, feature in enumerate(predictors):
-        if feature in selected_numeric:
-            default_val = str(float(data[feature].median(skipna=True)))
-            val = cols_ui[i % len(cols_ui)].text_input(f"{feature} (numeric)", value=default_val)
-            try:
-                input_dict[feature] = float(val)
-            except:
-                input_dict[feature] = np.nan
-        else:
-            default_val = str(data[feature].mode().iloc[0]) if not data[feature].mode().empty else ""
-            val = cols_ui[i % len(cols_ui)].text_input(f"{feature} (categorical)", value=default_val)
-            input_dict[feature] = val
 
-    if st.button("Predict with pipeline"):
+# Build the input form for manual prediction
+st.write("Pipeline ready for prediction. Provide values for the features you trained with.")
+input_dict = {}
+cols_ui = st.columns(max(1, min(len(predictors), 4)))
+for i, feature in enumerate(predictors):
+    if feature in selected_numeric:
+        default_val = str(float(data[feature].median(skipna=True)))
+        val = cols_ui[i % len(cols_ui)].text_input(f"{feature} (numeric)", value=default_val)
         try:
-            input_df = pd.DataFrame([input_dict])
-            if selected_numeric and input_df[selected_numeric].isnull().any().any():
-                st.error("Please provide numeric values for numeric features.")
-            else:
-                pred = model_for_pred.predict(input_df)[0]
-                st.success(f"Predicted {target}: **{pred:.4f}**")
-        except Exception as e:
-            st.error(f"Prediction failed: {e}")
+            input_dict[feature] = float(val)
+        except:
+            input_dict[feature] = np.nan
+    else:
+        default_val = str(data[feature].mode().iloc[0]) if not data[feature].mode().empty else ""
+        val = cols_ui[i % len(cols_ui)].text_input(f"{feature} (categorical)", value=default_val)
+        input_dict[feature] = val
+
+# Two-button layout: predict with trained model (session) OR with loaded model (from disk)
+col_a, col_b = st.columns(2)
+
+with col_a:
+    if st.button("Predict with trained model (this session)"):
+        model_trained = st.session_state.get("best_model")
+        if model_trained is None:
+            st.error("No trained model available in this session. Train a model first.")
+        else:
+            try:
+                input_df = pd.DataFrame([input_dict])
+                if selected_numeric and input_df[selected_numeric].isnull().any().any():
+                    st.error("Please provide numeric values for numeric features.")
+                else:
+                    pred = model_trained.predict(input_df)[0]
+                    st.success(f"Predicted {target} (trained model): **{pred:.4f}**")
+            except Exception as e:
+                st.error(f"Prediction with trained model failed: {e}")
+
+with col_b:
+    if st.button("Predict with loaded model (from disk)"):
+        model_loaded = st.session_state.get("loaded_model")
+        if model_loaded is None:
+            st.error("No model loaded from disk. Load a saved model first.")
+        else:
+            try:
+                input_df = pd.DataFrame([input_dict])
+                if selected_numeric and input_df[selected_numeric].isnull().any().any():
+                    st.error("Please provide numeric values for numeric features.")
+                else:
+                    pred = model_loaded.predict(input_df)[0]
+                    st.success(f"Predicted {target} (loaded model): **{pred:.4f}**")
+            except Exception as e:
+                st.error(f"Prediction with loaded model failed: {e}")
 
 st.markdown("---")
 st.caption(
@@ -428,6 +450,5 @@ st.caption(
 Notes:
 - Correlation heatmap is Pearson's correlation on numeric features and the numeric target.
 - For categorical predictors we compute one-hot dummies and show correlations between those dummies and the numeric target (useful for detecting strong category-target associations).
-- Ensure rare_grouper.py exists at project root so the pipeline's RareCategoryGrouper can be pickled and loaded reliably.
 """
 )
